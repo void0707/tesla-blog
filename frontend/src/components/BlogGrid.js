@@ -1,5 +1,3 @@
-import React from "react";
-import BlogCard from "./BlogCard";
 import "./BlogGrid.css";
 
 const BlogGrid = ({ blogs }) => {

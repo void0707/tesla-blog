@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BlogGrid from "./components/BlogGrid";
-import "./app.css";
+import "./App.css";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
 
