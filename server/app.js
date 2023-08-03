@@ -64,7 +64,7 @@ let task = cron.schedule("* * * * *", () => {
 });
 
 task.start();
-const corsOptions = { origin: "http://localhost:3000" };
+const corsOptions = { origin: "https://tesla-frontend.onrender.com" };
 // Create an express application and use cors
 
 app.use(cors(corsOptions));
