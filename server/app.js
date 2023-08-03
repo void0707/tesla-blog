@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 app.use(cors());
 
-const corsOptions = { origin: "export default" };
+const corsOptions = { origin: "https://tesla-frontend.onrender.com" };
 app.use(express.json());
 //connect MongoDB
 mongoose
