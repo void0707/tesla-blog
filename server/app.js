@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 app.use(cors());
 
-const corsOptions = { origin: "https://localhost:3000" };
+const corsOptions = { origin: "export default" };
 app.use(express.json());
 //connect MongoDB
 mongoose
