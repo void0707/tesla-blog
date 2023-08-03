@@ -1,5 +1,5 @@
 import "./BlogGrid.css";
-
+import BlogCard from "./BlogCard";
 const BlogGrid = ({ blogs }) => {
   return (
     <div className="blog-grid">
