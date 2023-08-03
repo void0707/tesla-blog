@@ -5,7 +5,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    fetch("https://tesla-blog.onrender.com") // replace with your API endpoint
+    fetch("https://tesla-blog.onrender.com/blogs") // replace with your API endpoint
       .then((response) => response.json())
       .then((data) => setBlogs(data))
       .catch((error) => console.error(error));
