@@ -1,0 +1,4 @@
+.blog-grid {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,17 +1,26 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import BlogGrid from "./components/BlogGrid";
+import "./app.css";
+const App = () => {
+  const [blogs, setBlogs] = useState([]);
 
-function App() {
-  const [message, setMessage] = useState("");
   useEffect(() => {
-    fetch("https://tesla-blog.onrender.com")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
-  }, []);
+    fetch("http://localhost:4000/blogs") // replace with your API endpoint
+      .then((response) => response.json())
+      .then((data) => setBlogs(data))
+      .catch((error) => console.error(error));
+  }, []); // Empty dependency array means this effect runs once on mount
+
   return (
-    <div className="App">
-      <h1>{message}</h1>
+    <div className="container">
+      <center>
+        {" "}
+        <h1 className="heading">Tesla Of Texas</h1>
+        <p className="subheading">Daily Updates</p>
+      </center>
+      <BlogGrid blogs={blogs} />
     </div>
   );
-}
+};
+
 export default App;
