@@ -16,14 +16,21 @@
   margin-bottom: 1em;
   color: white;
 }
+.related {
+  margin-top: 3em;
+}
 .story {
   font-size: 1.5em;
   color: white;
 }
-.preview-content {
-  padding: 1em 3em;
+@media only screen and (min-width: 800px) {
+  .preview-content {
+    padding: 1em 3em;
+  }
 }
-
+.creds {
+  color: white;
+}
 .button-20 {
   appearance: button;
 

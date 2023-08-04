@@ -69,3 +69,8 @@
     font-size: 1.3rem;
   }
 }
+@media only screen and (max-width: 560px) {
+  .blog-card-content {
+    display: none;
+  }
+}

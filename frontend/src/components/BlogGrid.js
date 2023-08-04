@@ -9,6 +9,8 @@ const BlogGrid = ({ blogs }) => {
           title={blog.title}
           content={blog.description}
           id={blog._id}
+          author={blog.author}
+          image={blog.image}
         />
       ))}
     </div>

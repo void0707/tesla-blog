@@ -25,8 +25,10 @@ mongoose
 const blogSchema = new mongoose.Schema({
   title: String,
   story: String,
+  author: String,
   description: String,
   date: Date,
+  image: String,
 });
 
 const Blog = mongoose.model("Blog", blogSchema);
@@ -35,7 +37,9 @@ const Blog = mongoose.model("Blog", blogSchema);
 let parser = new Parser();
 
 // The URL of the RSS feed to parse
-const RSS_URL = "http://feeds.feedburner.com/DriveTeslaCanada";
+const array = [
+  { "Drive Tesla Canada": "http://feeds.feedburner.com/DriveTeslaCanada" },
+];
 
 async function classifyNews(newsTitle) {
   const url = "https://api.openai.com/v1/chat/completions ";
@@ -62,31 +66,51 @@ async function classifyNews(newsTitle) {
   return answer;
 }
 
+const images_links = [
+  "https://images.unsplash.com/photo-1617704548623-340376564e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHRlc2xhfGVufDB8fDB8fHww&w=1000&q=80",
+  "https://cdn.pixabay.com/photo/2021/01/21/11/09/tesla-5937063_640.jpg",
+  "https://p1.pxfuel.com/preview/928/948/953/tesla-electric-car-vehicle-car-auto-model-x-royalty-free-thumbnail.jpg",
+  "https://images.unsplash.com/photo-1560958089-b8a1929cea89?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGVzbGF8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+  "https://images.pexels.com/photos/12086520/pexels-photo-12086520.jpeg?cs=srgb&dl=pexels-kevin-burnell-12086520.jpg&fm=jpg",
+  "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2Fyc3xlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
+  "https://images.unsplash.com/photo-1595788701530-2d3642a509d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDExfHx8ZW58MHx8fHx8&w=1000&q=80",
+  "https://images.unsplash.com/photo-1590510616176-67c37c34fa28?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNoZXZyb2xldHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
+];
+
 let task = cron.schedule("0 * * * *", () => {
   // Runs every hour
   (async () => {
-    let feed = await parser.parseURL(RSS_URL);
+    for (let obj of array) {
+      for (let [author_, RSS_URL] of Object.entries(obj)) {
+        let feed = await parser.parseURL(RSS_URL);
 
-    for (let item of feed.items) {
-      // Check if this post has been extracted before
-      let blog = await Blog.findOne({ title: item.title });
+        for (let item of feed.items) {
+          // Check if this post has been extracted before
+          if (item.title.toLowerCase().includes("tesla")) {
+            let blog = await Blog.findOne({ title: item.title });
 
-      if (!blog) {
-        const tex = await classifyNews(item.title);
-        console.log(tex);
-        if (tex.toLowerCase().includes("bad")) {
-          // Store the title in
-          let $ = cheerio.load(item["content:encoded"]);
+            if (!blog) {
+              const tex = await classifyNews(item.title);
+              let randomIndex = Math.floor(Math.random() * images_links.length);
+              console.log(tex);
+              if (tex.toLowerCase().includes("bad")) {
+                // Store the title in
+                let $ = cheerio.load(item["content:encoded"]);
 
-          blog = new Blog({
-            title: item.title,
-            description: item.contentSnippet,
-            story: $.text(),
-            date: item.isoDate,
-          });
-          console.log(item.contentSnippet);
+                blog = new Blog({
+                  title: item.title,
+                  description: item.contentSnippet,
+                  author: author_,
+                  story: $.text(),
+                  date: item.isoDate,
+                  image: images_links[randomIndex],
+                });
+                console.log(item.contentSnippet);
 
-          await blog.save();
+                await blog.save();
+              }
+            }
+          }
         }
       }
     }
@@ -95,7 +119,7 @@ let task = cron.schedule("0 * * * *", () => {
 
 task.start();
 const corsOptions = {
-  origin: ["https://tesla-frontend.onrender.com"],
+  origin: ["https://tesla-frontend.onrender.com", "http://localhost:3000"],
 };
 // Create an express application and use cors
 
