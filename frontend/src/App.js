@@ -1,25 +1,18 @@
 import React, { useEffect, useState } from "react";
 import BlogGrid from "./components/BlogGrid";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import BlogPreviewPage from "./components/BlogPreviewPage";
+import Home from "./components/Home";
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-
-  useEffect(() => {
-    fetch("https://tesla-blog.onrender.com/blogs") // replace with your API endpoint
-      .then((response) => response.json())
-      .then((data) => setBlogs(data))
-      .catch((error) => console.error(error));
-  }, []); // Empty dependency array means this effect runs once on mount
-
   return (
-    <div className="container">
-      <center>
-        {" "}
-        <h1 className="heading">Tesla Of Texas</h1>
-        <p className="subheading">Daily Updates</p>
-      </center>
-      <BlogGrid blogs={blogs} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/blog/:id" element={<BlogPreviewPage />} />
+        <Route path="/" index element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
