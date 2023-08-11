@@ -8,6 +8,7 @@ require("dotenv").config();
 const cheerio = require("cheerio");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const app = express();
+const fs = require("fs");
 app.use(express.json());
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -41,13 +42,26 @@ const array = [
   { "Drive Tesla Canada": "http://feeds.feedburner.com/DriveTeslaCanada" },
 ];
 
+function appendToJSONFile(newBlog, jsonPath) {
+  // Step 1: Read the current content of the JSON file.
+  const jsonData = fs.readFileSync(jsonPath, "utf-8");
+
+  // Step 2: Parse the content to get the current array of blogs.
+  const blogs = JSON.parse(jsonData);
+
+  // Step 3: Push the new blog to the array.
+  blogs.push(newBlog);
+
+  // Step 4: Write the updated array back to the JSON file.
+  fs.writeFileSync(jsonPath, JSON.stringify(blogs, null, 2));
+}
 async function classifyNews(newsTitle) {
   const url = "https://api.openai.com/v1/chat/completions ";
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${OPENAI_API_KEY}`,
   };
-  const prompt = `Write in One word. The following news title is a good news or a bad news: "${newsTitle}"?\nAnswer: `;
+  const prompt = `Write in One word (good or bad). The following news title is a good news or a bad news: "${newsTitle}"?\nAnswer: `;
   const data = {
     model: "gpt-3.5-turbo",
     messages: [
@@ -66,6 +80,16 @@ async function classifyNews(newsTitle) {
   return answer;
 }
 
+function readBlogsFromFile(filePath) {
+  const jsonData = fs.readFileSync(filePath, "utf-8");
+  return JSON.parse(jsonData);
+}
+function blogExists(blogTitle, filePath) {
+  const blogs = readBlogsFromFile(filePath);
+
+  return blogs.some((blog) => blog.title === blogTitle);
+}
+
 const images_links = [
   "https://images.unsplash.com/photo-1617704548623-340376564e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHRlc2xhfGVufDB8fDB8fHww&w=1000&q=80",
   "https://cdn.pixabay.com/photo/2021/01/21/11/09/tesla-5937063_640.jpg",
@@ -77,19 +101,21 @@ const images_links = [
   "https://images.unsplash.com/photo-1590510616176-67c37c34fa28?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNoZXZyb2xldHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
 ];
 
+jsonPath = "../frontend/public/blogs.json";
 let task = cron.schedule("0 * * * *", () => {
   // Runs every hour
   (async () => {
     for (let obj of array) {
       for (let [author_, RSS_URL] of Object.entries(obj)) {
         let feed = await parser.parseURL(RSS_URL);
+        let blogs = [];
 
         for (let item of feed.items) {
           // Check if this post has been extracted before
           if (item.title.toLowerCase().includes("tesla")) {
             let blog = await Blog.findOne({ title: item.title });
 
-            if (!blog) {
+            if (!blogExists(item.title, jsonPath)) {
               const tex = await classifyNews(item.title);
               let randomIndex = Math.floor(Math.random() * images_links.length);
               console.log(tex);
@@ -97,17 +123,17 @@ let task = cron.schedule("0 * * * *", () => {
                 // Store the title in
                 let $ = cheerio.load(item["content:encoded"]);
 
-                blog = new Blog({
+                blogJson = {
                   title: item.title,
                   description: item.contentSnippet,
                   author: author_,
                   story: $.text(),
                   date: item.isoDate,
                   image: images_links[randomIndex],
-                });
+                };
                 console.log(item.contentSnippet);
 
-                await blog.save();
+                appendToJSONFile(blogJson, jsonPath);
               }
             }
           }

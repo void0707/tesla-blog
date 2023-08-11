@@ -11,19 +11,17 @@ function BlogPreviewPage() {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/blog/${id}`) // replace with your API endpoint
+    // Find the blog with the given ID
+    console.log(id);
+    fetch("/blogs.json") // replace with your API endpoint
       .then((response) => response.json())
       .then((data) => {
-        setBlog(data);
-      })
-      .catch((error) => console.error(error));
-
-    fetch("https://tesla-blog.onrender.com/blogs") // replace with your API endpoint
-      .then((response) => response.json())
-      .then((data) => {
+        console.log(data);
+        const found = data.find((b) => b._id === id);
         setBlogs(data);
-      })
-      .catch((error) => console.error(error));
+        setBlog(found);
+        console.log(found);
+      });
   }, [id]);
 
   return (
