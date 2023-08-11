@@ -7,7 +7,7 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch("https://tesla-blog.onrender.com/blogs") // replace with your API endpoint
+    fetch("/blogs.json") // replace with your API endpoint
       .then((response) => response.json())
       .then((data) => {
         setBlogs(data);
