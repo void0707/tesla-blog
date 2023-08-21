@@ -1,0 +1,33 @@
+.container {
+  background-color: #fff6ef !important;
+}
+.text-dark {
+  color: #152035;
+}
+
+.banner {
+  width: 80%;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0 2.5em 0;
+}
+
+.h1 {
+  font-size: 2.5em !important;
+}
+
+.logo {
+  width: 150px;
+}
+
+@media (max-width: 768px) {
+  .banner {
+    width: 100%;
+    font-size: 30px;
+  }
+  .h1 {
+    font-size: 2em !important;
+  }
+}

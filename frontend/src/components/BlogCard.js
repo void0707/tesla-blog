@@ -1,19 +1,36 @@
 import React from "react";
 import "./BlogCard.css";
 import { Link } from "react-router-dom";
+import { FaUser, FaClock, FaCalendar } from "react-icons/fa";
 
-const BlogCard = ({ title, content, id, author, image }) => {
+const BlogCard = ({ title, content, id, author, image, date }) => {
   return (
     <div className="blog-card">
-      <img src={image} />
+      <div className="image-container">
+        <img src={image} />
+      </div>
       <div className="blog-content">
-        <h2 className="blog-card-title">{title}</h2>
+        <Link className="blog-card-title text-dark" to={`/blog/${id}`}>
+          {" "}
+          <h2>{title}</h2>
+        </Link>
         <p className="blog-card-content">{content}</p>
         <br />
-        <p>Author: {author}</p>
-        <Link to={`/blog/${id}`}>
-          <button className="button-20">Read More</button>
-        </Link>
+
+        <div className="stats">
+          <p>
+            <FaUser />
+            &nbsp;&nbsp;{author}
+          </p>
+          <p>
+            <FaClock />
+            &nbsp;&nbsp;1 min read
+          </p>
+          <p>
+            <FaCalendar />
+            &nbsp;&nbsp;{date}
+          </p>
+        </div>
       </div>
     </div>
   );

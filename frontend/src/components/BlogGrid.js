@@ -2,7 +2,7 @@ import "./BlogGrid.css";
 import BlogCard from "./BlogCard";
 const BlogGrid = ({ blogs }) => {
   return (
-    <div className="blog-grid">
+    <div className="grid-container">
       {blogs.map((blog) => (
         <BlogCard
           key={blog._id}
@@ -11,6 +11,7 @@ const BlogGrid = ({ blogs }) => {
           id={blog._id}
           author={blog.author}
           image={blog.image}
+          date={blog.date}
         />
       ))}
     </div>

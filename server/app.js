@@ -9,6 +9,8 @@ const cheerio = require("cheerio");
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const app = express();
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+
 app.use(express.json());
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -38,7 +40,7 @@ const Blog = mongoose.model("Blog", blogSchema);
 let parser = new Parser();
 
 // The URL of the RSS feed to parse
-const array = [
+const Rssarray = [
   { "Drive Tesla Canada": "http://feeds.feedburner.com/DriveTeslaCanada" },
 ];
 
@@ -90,6 +92,14 @@ function blogExists(blogTitle, filePath) {
   return blogs.some((blog) => blog.title === blogTitle);
 }
 
+function truncateText(text) {
+  const maxLength = 50; // Set the maximum number of characters
+
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + "...";
+  }
+}
+
 const images_links = [
   "https://images.unsplash.com/photo-1617704548623-340376564e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHRlc2xhfGVufDB8fDB8fHww&w=1000&q=80",
   "https://cdn.pixabay.com/photo/2021/01/21/11/09/tesla-5937063_640.jpg",
@@ -105,9 +115,10 @@ jsonPath = "../frontend/public/blogs.json";
 let task = cron.schedule("0 * * * *", () => {
   // Runs every hour
   (async () => {
-    for (let obj of array) {
+    for (let obj of Rssarray) {
       for (let [author_, RSS_URL] of Object.entries(obj)) {
         let feed = await parser.parseURL(RSS_URL);
+        console.log(feed);
         let blogs = [];
 
         for (let item of feed.items) {
@@ -122,14 +133,18 @@ let task = cron.schedule("0 * * * *", () => {
               if (tex.toLowerCase().includes("bad")) {
                 // Store the title in
                 let $ = cheerio.load(item["content:encoded"]);
+                const formattedDate = new Date(item.isoDate)
+                  .toISOString()
+                  .split("T")[0];
 
                 blogJson = {
                   title: item.title,
-                  description: item.contentSnippet,
+                  description: truncateText(item.contentSnippet),
                   author: author_,
                   story: $.text(),
-                  date: item.isoDate,
+                  date: formattedDate,
                   image: images_links[randomIndex],
+                  _id: uuidv4(),
                 };
                 console.log(item.contentSnippet);
 
@@ -144,31 +159,3 @@ let task = cron.schedule("0 * * * *", () => {
 });
 
 task.start();
-const corsOptions = {
-  origin: ["https://tesla-frontend.onrender.com"],
-};
-// Create an express application and use cors
-
-app.use(cors(corsOptions));
-app.get("/", (req, res) => {
-  res.status(201).json({ message: "Connected" });
-});
-// Define an endpoint to get all blogs
-app.get("/blogs", async (req, res) => {
-  let blogs = await Blog.find({});
-  res.json(blogs);
-});
-app.get("/blog/:id", async (req, res) => {
-  // Extract id from request parameters
-  const id = req.params.id; // Removed parseInt
-  try {
-    const blog = await Blog.findById(id);
-    if (!blog) {
-      return res.status(404).send("Blog Not Found");
-    }
-    return res.json(blog);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Something went wrong.");
-  }
-});

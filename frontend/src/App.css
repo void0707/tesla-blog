@@ -1,9 +1,5 @@
 .container {
-  background-image: radial-gradient(
-    circle farthest-corner at 10% 20%,
-    rgb(146, 24, 24) 0%,
-    rgba(4, 0, 4, 1) 90%
-  );
+  background-color: #fff6ef;
 }
 .Loading {
   display: flex;
@@ -16,13 +12,12 @@
   color: white;
   font-size: 3em;
   text-transform: uppercase;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+
   padding-top: 50px;
 }
 .subheading {
   color: white;
   font-size: 2em;
 
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
   padding-bottom: 1em;
 }

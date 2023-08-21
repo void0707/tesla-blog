@@ -1,9 +1,4 @@
 .container {
-  background-image: radial-gradient(
-    circle farthest-corner at 10% 20%,
-    rgb(146, 24, 24) 0%,
-    rgba(4, 0, 4, 1) 90%
-  );
   display: flex;
   flex-direction: column;
   min-height: 1000px;
@@ -14,14 +9,14 @@
 .heading {
   font-size: 2em;
   margin-bottom: 1em;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .related {
   margin-top: 3em;
 }
 .story {
   font-size: 1.5em;
-  color: white;
+  color: black;
 }
 @media only screen and (min-width: 800px) {
   .preview-content {

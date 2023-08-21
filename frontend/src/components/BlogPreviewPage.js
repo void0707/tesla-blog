@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./BlogPreviewPage.css";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import BlogCard from "./BlogCard";
 import BlogGrid from "./BlogGrid";
+import Logobar from "./Logobar";
+import { FaUser, FaClock, FaCalendar } from "react-icons/fa";
 
 function BlogPreviewPage() {
   const { id } = useParams();
@@ -25,28 +26,42 @@ function BlogPreviewPage() {
   }, [id]);
 
   return (
-    <div className="container">
-      <Link to={`/`}>
-        <button className="button-20">Go Back</button>
-      </Link>
-      {blog ? (
-        <div className="preview-content">
-          <h1 className="heading">{blog.title}</h1>
-          <p className="story">{blog.story}</p>
-          <div className="creds">
-            <br /> <p> Author: {blog.author}</p>
-            <p>Date: {blog.date.substring(0, 10)}</p>
+    <>
+      <Logobar />
+      <div className="container">
+        <Link to={`/`}>
+          <button className="button-20">Go Back</button>
+        </Link>
+        {blog ? (
+          <div className="preview-content">
+            <h1 className="heading">{blog.title}</h1>
+            <p className="story">{blog.story}</p>
+            <br />
+            <div className="stats">
+              <p>
+                <FaUser />
+                &nbsp;&nbsp;{blog.author}
+              </p>
+              <p>
+                <FaClock />
+                &nbsp;&nbsp;1 min read
+              </p>
+              <p>
+                <FaCalendar />
+                &nbsp;&nbsp;{blog.date}
+              </p>
+            </div>
           </div>
-        </div>
-      ) : (
-        <h1 className="heading">Loading</h1>
-      )}
+        ) : (
+          <h1 className="heading">Loading</h1>
+        )}
 
-      <div className="related">
-        <h1 className="heading">View Other Blogs</h1>
-        <BlogGrid blogs={blogs.filter((blog) => blog._id !== id)} />
+        <div className="related">
+          <h1 className="heading">View Other Blogs</h1>
+          <BlogGrid blogs={blogs.filter((blog) => blog._id !== id)} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
