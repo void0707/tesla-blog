@@ -109,6 +109,9 @@ const images_links = [
   "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2Fyc3xlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
   "https://images.unsplash.com/photo-1595788701530-2d3642a509d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDExfHx8ZW58MHx8fHx8&w=1000&q=80",
   "https://images.unsplash.com/photo-1590510616176-67c37c34fa28?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNoZXZyb2xldHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80",
+  "https://images.pexels.com/photos/10029773/pexels-photo-10029773.jpeg",
+  "https://images.unsplash.com/photo-1617788138017-80ad40651399?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHRlc2xhfGVufDB8fDB8fHww&w=1000&q=80",
+  "https://i.insider.com/649318a51465b60019987ac0?width=1136&format=jpeg",
 ];
 
 jsonPath = "../frontend/public/blogs.json";
