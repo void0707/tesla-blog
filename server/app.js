@@ -115,7 +115,7 @@ const images_links = [
 ];
 
 jsonPath = "../frontend/public/blogs.json";
-let task = cron.schedule("* * * * *", () => {
+let task = cron.schedule("*/10 * * * *", () => {
   // Runs every hour
   (async () => {
     for (let obj of Rssarray) {
