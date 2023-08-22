@@ -93,7 +93,7 @@ function blogExists(blogTitle, filePath) {
 }
 
 function truncateText(text) {
-  const maxLength = 50; // Set the maximum number of characters
+  const maxLength = 150; // Set the maximum number of characters
 
   if (text.length > maxLength) {
     return text.slice(0, maxLength) + "...";
@@ -115,7 +115,7 @@ const images_links = [
 ];
 
 jsonPath = "../frontend/public/blogs.json";
-let task = cron.schedule("0 * * * *", () => {
+let task = cron.schedule("* * * * *", () => {
   // Runs every hour
   (async () => {
     for (let obj of Rssarray) {
